@@ -1,22 +1,22 @@
 from turtle import Screen
 from paddle import Paddle
 from ball import Ball
+from scoreboard import Scoreboard
 import time
 
 L_PADDLE = (-450, 0)
 R_PADDLE = (450, 0)
 
-
 screen = Screen()
 r_paddle = Paddle(R_PADDLE)
 l_paddle = Paddle(L_PADDLE)
 ball = Ball()
+scoreboard = Scoreboard()
 
 screen.screensize(800, 600)
 screen.bgcolor("black")
 screen.title("Naru-Pong")
 screen.tracer(0)
-
 
 screen.listen()
 screen.onkey(r_paddle.up, "Up")
@@ -39,10 +39,13 @@ while game_is_on:
     if ball.distance(r_paddle) < 50 and ball.xcor() > 400 or ball.distance(l_paddle) < 50 and ball.xcor() < -400:
         ball.bounce_x()
         ball.bounce_y()
-    #Detect if the ball passed the paddle
-    elif ball.xcor() > 460 or ball.xcor() < -460:
-        r_paddle.setpos(R_PADDLE)
-        l_paddle.setpos(L_PADDLE)
-        ball.setpos(0,0)
+    #R paddle misses
+    if ball.xcor() > 460:
+        ball.reset_position()
+        scoreboard.l_score()
+    #L paddle misses
+    if ball.xcor() < -460:
+        ball.reset_position()
+        scoreboard.r_score()
 
 screen.exitonclick()
